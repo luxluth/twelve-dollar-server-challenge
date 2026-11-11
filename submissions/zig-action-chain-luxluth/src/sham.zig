@@ -56,10 +56,14 @@ fn routeSlot(batch: *BatchState, i: usize, now_s: i64) void {
 
     if (std.mem.indexOf(u8, raw, "\r\n\r\n")) |hend| {
         body_start = hend + 4;
-        parseHeaders(raw[headers_start..hend], &auth_header, &keep_alive);
+        if (hend > headers_start) {
+            parseHeaders(raw[headers_start..hend], &auth_header, &keep_alive);
+        }
     } else if (std.mem.indexOf(u8, raw, "\n\n")) |hend| {
         body_start = hend + 2;
-        parseHeaders(raw[headers_start..hend], &auth_header, &keep_alive);
+        if (hend > headers_start) {
+            parseHeaders(raw[headers_start..hend], &auth_header, &keep_alive);
+        }
     }
     batch.keep_alive[i] = keep_alive;
 
